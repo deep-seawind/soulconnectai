@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+ 
+.bg-color{
+    background: linear-gradient(30deg, #de9f17 2%, #cf9a15 31%, #fff68a 68%, #ffcf45 96%);
+    color: black;
+}
+
+@keyframes goldGlowPulse {
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+
+.gold-glow {
+  animation: goldGlowPulse 6s ease-in-out infinite;
+}
+
