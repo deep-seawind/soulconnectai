@@ -23,6 +23,7 @@ import MainBanner from "../../../assets/main-hero/main.jpg";
 import MainBannerGif from "../../../assets/main-hero/GIf-2.gif";
 import Logo from "../../../assets/logo/logo.png";
 import SoulChatContainer from "../../SoulSense/SoulChatContainer";
+import BasicInfo from "../forms/basic-info/BasicInfo";
 
 /* ---------------------------------------
    STORAGE KEYS

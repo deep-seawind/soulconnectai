@@ -273,3 +273,5 @@ const BasicInfo = ({ onNext }) => {
 };
 
 export default BasicInfo;
+
+ 
