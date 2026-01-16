@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import SoulChatBot from "./SoulChatBot";
+import SoulChatBot from "./SoulChatButton";
 import SoulChatButton from "./SoulChatButton";
 
 const SoulChatContainer = () => {

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import AIMessage from "../../Home/AIMessage";
+import React, { useState } from "react"; 
 import { motion } from "framer-motion";
 import { z } from "zod";
+import AIMessage from "../../Home/AIMessage";
 
 /* ------------------ ZOD SCHEMA ------------------ */
 const basicInfoSchema = z.object({

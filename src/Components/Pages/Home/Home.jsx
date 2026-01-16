@@ -7,8 +7,7 @@ import SoulIntro from "./SoulIntro";
 import SoulLogin from "./SoulLogin";
 
 // Forms
-import AICompatibility from "../Forms/ai-compatibility/AICompatibility";
-import BasicInfo from "../forms/basic-info/BasicInfo";
+import AICompatibility from "../Forms/ai-compatibility/AICompatibility"; 
 import Education from "../Forms/education/Education";
 import Family from "../Forms/family/Family";
 import Lifestyle from "../Forms/lifestyle/Lifestyle";
