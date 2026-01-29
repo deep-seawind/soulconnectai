@@ -4,7 +4,7 @@ import Home from "../Components/Pages/Home/Home";
 import NotFound from "../Components/common/NotFound"; 
 import BestMatches from "../Components/Pages/BestMatches/BestMatches";
 import ProfileDetails from "../Components/Pages/BestMatches/ProfileDetails";
-import ScrollToTop from "../Components/common/ScrollToTop";
+import ScrollToTop from "../Components/common/ScrollToTop"; 
 import VerificationStatus from "../Components/Pages/Forms/verification/VerificationStatus";
 
 const Mainrouter = () => {

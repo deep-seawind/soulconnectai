@@ -2,8 +2,9 @@ import React from "react";
 import AIMessage from "../../Home/AIMessage";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom"; 
-import { VerificationForm, TrustScoreDisplay } from "./VerificationComponents";
+// import { VerificationForm, TrustScoreDisplay } from "./VerificationComponents";
 import { useVerification } from "./Useverification";
+import { TrustScoreDisplay, VerificationForm } from "./Verificationcomponents";
 
 const Verification = () => {
   const navigate = useNavigate();
