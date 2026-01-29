@@ -4,7 +4,7 @@ import {
   verificationFields, 
   sendOTP as sendOTPAPI, 
   verifyOTP as verifyOTPAPI 
-} from "./verificationUtils";
+} from "./Verificationutils.js";
 
 export const useVerification = (onNext) => {
   const [step, setStep] = useState(0);
