@@ -22,8 +22,7 @@ const SoulIntro = ({ onStart }) => {
         </p>
         <button
           onClick={onStart}
-          className="relative px-12 py-5 rounded-full font-bold text-lg transition-all duration-300
-                     bg-black text-white hover:bg-[#d4af37]"
+          className="relative px-12 py-5 rounded-full font-bold text-lg cursor-pointer bg-color"
         >
           Sign Up & Begin
         </button>

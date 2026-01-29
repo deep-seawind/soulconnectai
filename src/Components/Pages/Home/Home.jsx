@@ -49,8 +49,7 @@ const Home = () => {
   );
 
   const [isChanging, setIsChanging] = useState(false);
-
-  // 🔥 MASTER FORM DATA (SINGLE SOURCE OF TRUTH)
+ 
   const [formData, setFormData] = useState({
     basicInfo: {},
     education: {},
@@ -99,7 +98,7 @@ const Home = () => {
 
         navigate("/best-matches", {
           state: {
-            profileData: formData, // 🔥 SEND FULL DATA
+            profileData: formData,  
           },
         });
         return;

@@ -16,7 +16,7 @@ const StepInputArea = ({
 }) => {
   const getPreviewUrl = (file) => {
     if (!file) return null;
-    return URL.createObjectURL(file); // simple preview (or pass a function from parent for memoized)
+    return URL.createObjectURL(file);
   };
 
   return (
@@ -27,7 +27,9 @@ const StepInputArea = ({
       transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
     >
       <div className="relative bg-white backdrop-blur-2xl border border-slate-200/60 rounded-[2.5rem] p-8 md:p-10 shadow-[0_30px_80px_rgba(0,0,0,0.12)]">
-        <h1 className="text-sm font-medium text-slate-500 mb-6">{field.label}</h1>
+        <h1 className="text-sm font-medium text-slate-500 mb-6">
+          {field.label}
+        </h1>
 
         {/* PROFILE IMAGE */}
         {field.type === "image" && (
@@ -42,7 +44,7 @@ const StepInputArea = ({
               <div className="mt-4 relative w-32 h-32">
                 <img
                   src={getPreviewUrl(rawValue)}
-                  className="w-32 h-32 rounded-full object-cover shadow-md relative"
+                  className="w-32 h-32 rounded-full object-cover shadow-md"
                   alt="profile preview"
                 />
                 <button
@@ -74,7 +76,7 @@ const StepInputArea = ({
                     <div key={index} className="relative group w-20 h-20">
                       <img
                         src={getPreviewUrl(file)}
-                        className="w-20 h-20 rounded-xl object-cover shadow-sm transition-transform group-hover:scale-105 relative"
+                        className="w-20 h-20 rounded-xl object-cover shadow-sm"
                         alt={`gallery ${index + 1}`}
                       />
                       <button
@@ -85,30 +87,37 @@ const StepInputArea = ({
                         ✕
                       </button>
                     </div>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             )}
           </>
         )}
 
-        {/* TEXT / SELECT / NUMBER / DATE */}
+        {/* TEXT / BUTTON SELECT / NUMBER / DATE */}
         {field.type !== "image" && field.type !== "images" && (
           <div className="relative group">
             {field.type === "select" ? (
-              <select
-                autoFocus
-                value={rawValue || ""}
-                onChange={(e) => updateValue(e.target.value)}
-                className="w-full bg-transparent text-xl border-b border-slate-300 pb-3 focus:outline-none"
-              >
-                <option value="">Choose your answer</option>
-                {field.options.map((o) => (
-                  <option key={o} value={o}>
-                    {o}
-                  </option>
-                ))}
-              </select>
+  <div className="flex flex-wrap gap-3">
+    {field.options.map((option) => (
+      <button
+        key={option}
+        type="button"
+        onClick={() => {
+          updateValue(option);
+          setStep((s) => s + 1); // ✅ bypass validation safely
+        }}
+        className={`px-5 py-2.5 rounded-full border text-sm font-medium transition
+          ${
+            rawValue === option
+              ? "bg-black text-white border-black"
+              : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+          }`}
+      >
+        {option}
+      </button>
+    ))}
+  </div>
             ) : (
               <input
                 autoFocus
@@ -119,7 +128,7 @@ const StepInputArea = ({
                 className="w-full bg-transparent text-xl border-b border-slate-300 pb-3 focus:outline-none"
               />
             )}
- 
+
           </div>
         )}
 
@@ -133,7 +142,7 @@ const StepInputArea = ({
             onClick={() => setStep(fields.length - 1)}
             className={
               isFieldFilled
-                ? "bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full"
+                ? "bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full cursor-pointer"
                 : "text-slate-300 cursor-not-allowed"
             }
           >
@@ -144,7 +153,7 @@ const StepInputArea = ({
             {step > 0 && (
               <button
                 onClick={() => setStep((s) => s - 1)}
-                className="px-6 py-2.5 bg-black text-white rounded-full"
+                className="px-6 py-2.5 bg-black text-white rounded-full cursor-pointer"
               >
                 Back
               </button>
@@ -152,7 +161,7 @@ const StepInputArea = ({
 
             <button
               onClick={next}
-              className="px-6 py-2.5 rounded-full bg-color text-white font-semibold"
+              className="px-6 py-2.5 rounded-full bg-color text-white font-semibold cursor-pointer"
             >
               {step === fields.length - 1 ? "Send" : "Reply"}
             </button>

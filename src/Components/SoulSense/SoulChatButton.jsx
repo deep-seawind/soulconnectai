@@ -4,12 +4,11 @@ import { FiMessageCircle } from "react-icons/fi";
 
 const SoulChatButton = ({ onClick }) => {
   const [index, setIndex] = useState(0);
-  const messages = [
-    "Feeling lonely?",
+  const messages = [ 
+    "Talk to Soul",
     "Need to vent?",
     "Share a secret",
-    "How's your heart?",
-    "Talk to Soul",
+    "How's your heart?", 
   ];
  
   useEffect(() => {

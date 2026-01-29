@@ -13,7 +13,6 @@ const educationSchema = z.object({
   continueWorkingAfterMarriage: z.string().min(1, "Please select an option"),
   careerAmbitionLevel: z.string().min(1, "Please select ambition level"),
 });
-
 /* --------------------------------------------------- */
 
 const Education = ({ onNext }) => {
@@ -79,7 +78,7 @@ const Education = ({ onNext }) => {
       key: "careerAmbitionLevel",
       label: "Career Ambition Level",
       type: "select",
-      options: ["🟢 Balanced", "🟡 Moderate", "🔴 Highly Ambitious"],
+      options: ["Balanced", "Moderate", "Highly Ambitious"],
       message:
         "Everyone has a different drive. How ambitious are you about your career?",
     },
@@ -89,23 +88,25 @@ const Education = ({ onNext }) => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState("");
 
-  const currentField = fields[step];
-  const value = formData[currentField.key] || "";
+  const field = fields[step];
+  if (!field) return null;
+
+  const value = formData[field.key] || "";
 
   const updateValue = (val) => {
     setError("");
     setFormData((prev) => ({
       ...prev,
-      [currentField.key]: val,
+      [field.key]: val,
     }));
   };
 
-  /* -------------------- VALIDATION -------------------- */
+  /* ---------------- VALIDATION ---------------- */
   const validateCurrentField = () => {
     try {
       educationSchema
-        .pick({ [currentField.key]: true })
-        .parse({ [currentField.key]: value });
+        .pick({ [field.key]: true })
+        .parse({ [field.key]: formData[field.key] });
       return true;
     } catch (err) {
       setError(err.errors[0].message);
@@ -116,19 +117,21 @@ const Education = ({ onNext }) => {
   const next = () => {
     setError("");
 
-    const val = value?.toString().trim();
+    const val = formData[field.key]?.toString().trim();
     if (!val) {
       setError("This field is required");
       return;
     }
- 
+
     if (!validateCurrentField()) return;
 
+    // LAST FIELD → SEND ONLY
     if (step === fields.length - 1) {
       onNext();
-    } else {
-      setStep((s) => s + 1);
+      return;
     }
+
+    setStep((s) => s + 1);
   };
 
   const back = () => {
@@ -139,7 +142,7 @@ const Education = ({ onNext }) => {
     setStep(fields.length - 1);
   };
 
-  /* --------------------------------------------------- */
+  /* ------------------------------------------------ */
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -153,7 +156,7 @@ const Education = ({ onNext }) => {
           <AIMessage
             step={step + 1}
             isAnimating={false}
-            customMessage={currentField.message}
+            customMessage={field.message}
           />
         </motion.div>
       </div>
@@ -169,22 +172,38 @@ const Education = ({ onNext }) => {
 
         <div className="relative bg-white border border-slate-200/60 rounded-[2.5rem] p-8 md:p-10 shadow-[0_30px_80px_rgba(0,0,0,0.12)]">
           <h1 className="text-sm font-medium text-slate-500 mb-6">
-            {currentField.label}
+            {field.label}
           </h1>
 
           <div className="relative group">
-            {currentField.type === "select" ? (
-              <select
-                autoFocus
-                value={value}
-                onChange={(e) => updateValue(e.target.value)}
-                className="w-full bg-transparent text-xl font-semibold border-b border-slate-300 pb-3 focus:outline-none"
-              >
-                <option value="">Choose your answer</option>
-                {currentField.options.map((opt) => (
-                  <option key={opt}>{opt}</option>
+            {field.type === "select" ? (
+              <div className="flex flex-wrap gap-3">
+                {field.options.map((opt) => (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => {
+                      updateValue(opt);
+
+                      setTimeout(() => {
+                        if (step === fields.length - 1) {
+                          onNext();
+                        } else {
+                          setStep((s) => s + 1);
+                        }
+                      }, 0);
+                    }}
+                    className={`px-5 py-2.5 rounded-full border text-sm font-semibold transition cursor-pointer
+                      ${
+                        value === opt
+                          ? "bg-black text-white border-black"
+                          : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                      }`}
+                  >
+                    {opt}
+                  </button>
                 ))}
-              </select>
+              </div>
             ) : (
               <input
                 autoFocus
@@ -192,11 +211,17 @@ const Education = ({ onNext }) => {
                 value={value}
                 placeholder="Type your response…"
                 onChange={(e) => updateValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && next()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    next();
+                  }
+                }}
                 className="w-full bg-transparent text-xl md:text-2xl font-semibold border-b border-slate-300 pb-3 focus:outline-none"
               />
             )}
 
+            {/* underline */}
             <span className="absolute left-0 -bottom-px h-0.5 w-0 bg-linear-to-r from-indigo-500 to-rose-500 group-focus-within:w-full transition-all duration-500" />
           </div>
 
@@ -208,7 +233,7 @@ const Education = ({ onNext }) => {
           <div className="flex justify-between mt-8">
             <button
               onClick={skipToLast}
-              className="bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full text-sm"
+              className="bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full cursor-pointer text-sm"
             >
               Skip to last
             </button>
@@ -217,7 +242,7 @@ const Education = ({ onNext }) => {
               {step > 0 && (
                 <button
                   onClick={back}
-                  className="px-6 py-2.5 bg-black text-white rounded-full text-sm"
+                  className="px-6 py-2.5 bg-black text-white rounded-full text-sm cursor-pointer"
                 >
                   Back
                 </button>
@@ -225,7 +250,7 @@ const Education = ({ onNext }) => {
 
               <button
                 onClick={next}
-                className="px-6 py-2.5 rounded-full bg-color text-sm font-semibold"
+                className="px-6 py-2.5 rounded-full bg-color text-sm font-semibold cursor-pointer"
               >
                 {step === fields.length - 1 ? "Send" : "Reply"}
               </button>

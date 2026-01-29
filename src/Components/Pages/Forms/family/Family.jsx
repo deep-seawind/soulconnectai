@@ -137,41 +137,54 @@ const Family = ({ onNext }) => {
             {field.label}
           </h1>
 
-          <div className="relative group">
-            {field.type === "select" ? (
-              <select
-                autoFocus
-                value={value}
-                onChange={(e) => updateValue(e.target.value)}
-                className={`w-full bg-transparent text-xl font-semibold border-b pb-3 focus:outline-none transition
-                  ${
-                    error
-                      ? "border-red-500"
-                      : "border-slate-300 focus:border-indigo-500"
-                  }`}
-              >
-                <option value="">Choose your answer</option>
-                {field.options.map((o) => (
-                  <option key={o}>{o}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                autoFocus
-                type="text"
-                value={value}
-                placeholder="Type your response…"
-                onChange={(e) => updateValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && next()}
-                className={`w-full bg-transparent text-xl md:text-2xl font-semibold border-b pb-3 focus:outline-none transition
-                  ${
-                    error
-                      ? "border-red-500"
-                      : "border-slate-300 focus:border-indigo-500"
-                  }`}
-              />
-            )}
-          </div>
+        <div className="relative group">
+  {field.type === "select" ? (
+    <div className="flex flex-wrap gap-3">
+      {field.options.map((o) => (
+        <button
+          key={o}
+          type="button"
+          onClick={() => {
+            updateValue(o); 
+            if (step === fields.length - 1) { 
+              setTimeout(() => {
+                onNext();
+              }, 300); 
+            } else { 
+              setStep((s) => s + 1);
+            }
+          }}
+          className={`px-5 py-2.5 rounded-full border text-sm font-semibold transition cursor-pointer cursor-pointer
+            ${
+              value === o
+                ? "bg-black text-white border-black"
+                : error
+                ? "border-red-500 text-red-500"
+                : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+            }`}
+        >
+          {o}
+        </button>
+      ))}
+    </div>
+  ) : (
+    <input
+      autoFocus
+      type="text"
+      value={value}
+      placeholder="Type your response…"
+      onChange={(e) => updateValue(e.target.value)}
+      onKeyDown={(e) => e.key === "Enter" && next()}
+      className={`w-full bg-transparent text-xl md:text-2xl font-semibold border-b pb-3 focus:outline-none transition
+        ${
+          error
+            ? "border-red-500"
+            : "border-slate-300 focus:border-indigo-500"
+        }`}
+    />
+  )}
+</div>
+
 
           {/* ERROR MESSAGE */}
           {error && (
@@ -181,7 +194,7 @@ const Family = ({ onNext }) => {
           <div className="flex items-center justify-between mt-8">
             <button
               onClick={() => setStep(fields.length - 1)}
-              className="bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full"
+              className="bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full cursor-pointer"
             >
               Skip to last
             </button>
@@ -190,7 +203,7 @@ const Family = ({ onNext }) => {
               {step > 0 && (
                 <button
                   onClick={() => setStep((s) => s - 1)}
-                  className="text-sm font-medium text-slate-400 hover:text-slate-700"
+                  className="text-sm font-medium text-slate-400 hover:text-slate-700 cursor-pointer"
                 >
                   Back
                 </button>
@@ -198,7 +211,7 @@ const Family = ({ onNext }) => {
 
               <button
                 onClick={next}
-                className="px-6 py-2.5 rounded-full bg-color text-sm font-semibold transition"
+                className="px-6 py-2.5 rounded-full bg-color text-sm font-semibold cursor-pointer transition cursor-pointer"
               >
                 {step === fields.length - 1 ? "Send" : "Reply"}
               </button>

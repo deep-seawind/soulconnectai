@@ -1,8 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { IoLocationSharp, IoFlame, IoCheckmarkCircle, IoCloseOutline, IoHeart } from "react-icons/io5"; 
+import { 
+  IoLocationSharp, 
+  IoFlame, 
+  IoCheckmarkCircle, 
+  IoCloseOutline, 
+  IoHeart,
+  IoArrowBack 
+} from "react-icons/io5"; 
 import { FiMoon, FiCamera } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const matches = [
   {
@@ -50,8 +57,15 @@ const matches = [
 ];
 
 const BestMatches = () => {
+  const navigate = useNavigate();
+
+  const handleBackToVerification = () => {
+    // Navigate back to verification page
+    navigate('/verification-status');
+  };
+
   return (
-    <div className="min-h-screen bg-[#FAFBFF] text-slate-900 font-sans selection:bg-indigo-100">
+    <div className="min-h-screen  ">
       {/* SOFT AMBIENT BACKGROUND */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-100/50 rounded-full blur-[120px]" />
@@ -59,6 +73,23 @@ const BestMatches = () => {
       </div>
 
       <div className="relative z-10 container mx-auto px-6 py-12">
+        {/* BACK BUTTON */}
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          onClick={handleBackToVerification}
+          className="mb-8 flex items-center gap-3 px-6 py-3 bg-color rounded-full shadow-lg cursor-pointer "
+        >
+          <IoArrowBack 
+            size={20} 
+            className=" " 
+          />
+          <span className="text-sm font-semibold ">
+            Back to Verification
+          </span>
+        </motion.button>
+
         {/* SECTION TITLE */}
         <motion.h1
           initial={{ opacity: 0, x: -20 }}
@@ -88,32 +119,32 @@ const BestMatches = () => {
             >
               <Link to={"/profile-details"}>
                 {/* IMAGE WITH ZOOM EFFECT */}
-              <div className="aspect-4/5 overflow-hidden">
-            <motion.img
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
-              src={match.image}
-              alt={match.name}
-              className="w-full h-full object-cover"
-            />
-            {/* Multi-layered Vignette */}
-            <div className="absolute inset-0 bg-linear-to-t from-[#020617] via-transparent to-transparent opacity-90" />
-            <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-transparent" />
-          </div>
+                <div className="aspect-4/5 overflow-hidden">
+                  <motion.img
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
+                    src={match.image}
+                    alt={match.name}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Multi-layered Vignette */}
+                  <div className="absolute inset-0 bg-linear-to-t from-[#020617] via-transparent to-transparent opacity-90" />
+                  <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-transparent" />
+                </div>
 
                 {/* FLOATING ACTION BUTTONS */}
-          <div className="absolute top-1/2 left-0 right-0 flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:-translate-y-2">
-            <button className="w-14 h-14 bg-white/10 backdrop-blur-2xl rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-rose-500 transition-all active:scale-90">
-              <IoCloseOutline size={28} />
-            </button>
-            <button className="w-14 h-14 bg-indigo-500 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all active:scale-90">
-              <IoHeart size={28} />
-            </button>
-          </div>
+                <div className="absolute top-1/2 left-0 right-0 flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:-translate-y-2">
+                  <button className="w-14 h-14 bg-white/10 backdrop-blur-2xl rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-rose-500 transition-all active:scale-90">
+                    <IoCloseOutline size={28} />
+                  </button>
+                  <button className="w-14 h-14 bg-indigo-500 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all active:scale-90">
+                    <IoHeart size={28} />
+                  </button>
+                </div>
 
                 {/* TOP STATUS BADGE - LIGHT VERSION */}
                 <div className="absolute top-8 left-8">
-                  <div className="px-5 py-2 bg-white  backdrop-blur-md border border-white/40 rounded-full flex items-center gap-2 shadow-sm">
+                  <div className="px-5 py-2 bg-white backdrop-blur-md border border-white/40 rounded-full flex items-center gap-2 shadow-sm">
                     <span className="text-[11px] font-black uppercase tracking-widest text-slate-800">
                       {match.status}
                     </span>
@@ -121,7 +152,7 @@ const BestMatches = () => {
                 </div>
 
                 {/* BOTTOM GRADIENT - SOFT & DEEP */}
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-950/80 to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/80 to-transparent opacity-90" />
 
                 {/* CONTENT OVERLAY */}
                 <div className="absolute bottom-10 left-8 right-8 text-white">

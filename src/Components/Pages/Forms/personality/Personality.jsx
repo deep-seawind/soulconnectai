@@ -127,8 +127,10 @@ const Personality = ({ onNext }) => {
   const [step, setStep] = useState(0);
   const [data, setData] = useState({});
   const [error, setError] = useState("");
+ 
 
-  const field = fields[step];
+   const safeStep = Math.min(step, fields.length - 1);
+ const field = fields[step];
   const value = data[field.key] || "";
 
   const updateValue = (val) => {
@@ -150,7 +152,7 @@ const Personality = ({ onNext }) => {
     return true;
   };
 
-  const next = () => {
+const next = () => {
     setError("");
 
     const val = value?.toString().trim();
@@ -161,7 +163,12 @@ const Personality = ({ onNext }) => {
 
     if (!validateCurrentField()) return;
 
-    step === fields.length - 1 ? onNext() : setStep((s) => s + 1);
+    // ✅ Use safeStep for comparison
+    if (safeStep === fields.length - 1) {
+      onNext();
+    } else {
+      setStep((s) => s + 1);
+    }
   };
 
   return (
@@ -197,22 +204,32 @@ const Personality = ({ onNext }) => {
 
           <div className="relative group">
             {field.type === "select" ? (
-              <select
-                autoFocus
-                value={value}
-                onChange={(e) => updateValue(e.target.value)}
-                className={`w-full bg-transparent text-xl font-semibold border-b pb-3 focus:outline-none transition
-                  ${
-                    error
-                      ? "border-red-500"
-                      : "border-slate-300 focus:border-indigo-500"
-                  }`}
-              >
-                <option value="">Choose your answer</option>
-                {field.options.map((o) => (
-                  <option key={o}>{o}</option>
+             <div className="flex flex-wrap gap-3">
+                {field.options.map((opt) => (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => {
+                      updateValue(opt); 
+                      if (safeStep === fields.length - 1) { 
+                        setTimeout(() => {
+                          onNext();
+                        }, 200);
+                      } else { 
+                        setStep((s) => s + 1);
+                      }
+                    }}
+                    className={`px-5 py-2.5 rounded-full border text-sm font-semibold transition cursor-pointer cursor-pointer
+            ${
+              value === opt
+                ? "bg-black text-white border-black"
+                : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+            }`}
+                  >
+                    {opt}
+                  </button>
                 ))}
-              </select>
+              </div>
             ) : (
               <input
                 autoFocus
@@ -237,7 +254,7 @@ const Personality = ({ onNext }) => {
           <div className="flex items-center justify-between mt-8">
             <button
               onClick={() => setStep(fields.length - 1)}
-              className="bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full"
+              className="bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full cursor-pointer cursor-pointer"
             >
               Skip to last
             </button>
@@ -246,7 +263,7 @@ const Personality = ({ onNext }) => {
               {step > 0 && (
                 <button
                   onClick={() => setStep((s) => s - 1)}
-                  className="text-sm font-medium text-slate-400 hover:text-slate-700"
+                  className="text-sm font-medium text-slate-400 hover:text-slate-700 cursor-pointer"
                 >
                   Back
                 </button>
@@ -254,7 +271,7 @@ const Personality = ({ onNext }) => {
 
               <button
                 onClick={next}
-                className="px-6 py-2.5 rounded-full bg-color text-sm font-semibold transition"
+                className="px-6 py-2.5 rounded-full bg-color text-sm font-semibold cursor-pointer transition cursor-pointer"
               >
                 {step === fields.length - 1 ? "Send" : "Reply"}
               </button>

@@ -52,7 +52,7 @@ const SoulLogin = ({ onBack, onSuccess }) => {
                   placeholder=" "
                 />
                 <label
-                  className="absolute left-0 top-2 text-slate-400 pointer-events-none transition-all duration-300
+                  className="absolute left-0 top-2 text-slate-400 pointer-events-none 
                     peer-focus:-top-4 peer-focus:text-sm peer-focus:text-[#d4af37]
                     peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:text-sm"
                 >
@@ -99,7 +99,7 @@ const SoulLogin = ({ onBack, onSuccess }) => {
 
           <button
             onClick={showOTP ? onSuccess : () => setShowOTP(true)}
-            className="px-10 py-4 bg-black text-white rounded-full font-bold hover:scale-105 transition-all"
+            className="px-10 py-4 bg-black text-white rounded-full font-bold cursor-pointer bg-color transition-all"
           >
             {showOTP ? "Verify" : "Continue"}
           </button>
