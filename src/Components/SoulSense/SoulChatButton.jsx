@@ -20,7 +20,7 @@ const SoulChatButton = ({ onClick }) => {
   }, []);
 
   return (
-    <div className="fixed bottom-8 right-8 z-60 flex items-center gap-4">
+    <div className="fixed bottom-30 right-8 z-60 flex items-center gap-4">
       {/* 1. DYNAMIC MESSAGE BUBBLE */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}

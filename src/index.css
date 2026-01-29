@@ -1,27 +1,32 @@
 @import "tailwindcss";
 
- 
-.bg-color{
-    background: linear-gradient(30deg, #de9f17 2%, #cf9a15 31%, #fff68a 68%, #ffcf45 96%);
-    color: black;
+.bg-color {
+  background: linear-gradient(
+    30deg,
+    #de9f17 2%,
+    #cf9a15 31%,
+    #fff68a 68%,
+    #ffcf45 96%
+  );
+  color: black;
+}
+.bg-color-border {
+  background: linear-gradient(
+    90deg,
+    #de9f17,
+    #fff68a,
+    #ffcf45,
+    #de9f17
+  );
+  background-size: 200% 100%;
+  animation: gradient-move 3s linear infinite;
 }
 
-@keyframes goldGlowPulse {
+@keyframes gradient-move {
   0% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.03);
+    background-position: 0% 50%;
   }
   100% {
-    opacity: 0.4;
-    transform: scale(1);
+    background-position: 200% 50%;
   }
 }
-
-.gold-glow {
-  animation: goldGlowPulse 6s ease-in-out infinite;
-}
-

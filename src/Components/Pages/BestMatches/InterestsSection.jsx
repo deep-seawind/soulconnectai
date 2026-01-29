@@ -1,78 +1,81 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { IoSparklesSharp, IoAddOutline } from "react-icons/io5";
+import { IoSparkles, IoAdd, IoShapesOutline } from "react-icons/io5";
 
 const InterestsSection = ({ data }) => {
-  // Guard clause for data
   if (!data || !data.traits) return null;
 
   return (
     <section className="mb-24 relative">
-      {/* 1. HEADER WITH DEPTH */}
-      <div className="flex justify-between items-end mb-12">
+      {/* 1. SECTION HEADER: AI INSPIRED */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div className="relative">
-          <div className="text-4xl font-bold text-slate-950">
-            Vibe & Passions
-          </div>
+          <h2 className="text-4xl font-bold text-slate-900 tracking-tighter">
+            Vibe <span className="text-slate-300 font-light">&</span> Passions
+          </h2>
+          <motion.div
+            initial={{ width: 0 }}
+            whileInView={{ width: "8rem" }}
+            className="h-1 bg-color-border mt-4 rounded-full"
+          />
         </div>
 
-        {/* Actionable Badge */}
-        <motion.div
+        <motion.button
           whileHover={{
-            scale: 1.05, 
+            scale: 1.05,
+            boxShadow: "0 20px 40px rgba(99, 102, 241, 0.2)",
           }}
-          className="group flex items-center gap-2 text-[11px] bg-color text-black px-5 py-3 rounded-2xl shadow-sm cursor-pointer transition-all duration-300"
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-3 px-6 py-3 bg-slate-900 text-white rounded-2xl shadow-xl transition-all group"
         >
-          <IoAddOutline className="text-lg group-hover:rotate-90 transition-transform duration-300 text-black" />
-          Explore {data.moreTraits || 12} More
-        </motion.div>
+          <div className="p-1 bg-white/10 rounded-lg group-hover:rotate-90 transition-transform duration-500">
+            <IoAdd size={18} />
+          </div>
+          <span className="text-xs font-bold uppercase tracking-widest">
+            Explore Full Deck
+          </span>
+        </motion.button>
       </div>
 
-      {/* 2. DYNAMIC PILL GRID */}
-      <div className="flex flex-wrap gap-4">
+      {/* 2. THE BENTO-GRID ARCHITECTURE */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
         {data.traits.map((trait, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.5 }}
-            whileHover={{
-              y: -5,
-              boxShadow: "0 20px 40px -10px rgba(79, 70, 229, 0.12)",
-              borderColor: "rgba(79, 70, 229, 0.2)",
-            }}
-            className="relative flex items-center gap-4 px-8 py-5 rounded-[2.5rem] border border-slate-100 bg-white shadow-[0_4px_20px_-1px_rgba(0,0,0,0.02)] transition-all cursor-pointer group overflow-hidden"
+            transition={{ delay: i * 0.1, duration: 0.6 }}
+            whileHover={{ y: -8 }}
+            className={`group relative overflow-hidden rounded-[2.5rem] border border-slate-200/60 bg-white p-2 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.02)]
+              }
+            `}
           >
-            {/* Subtle Gradient Hover background */}
-            <div className="absolute inset-0 bg-linear-to-br from-indigo-50/0 to-indigo-50/0 group-hover:from-indigo-50/50 group-hover:to-white transition-all duration-500" />
+            <div className="absolute inset-0 p-[1.5px] rounded-[2.5rem] bg-linear-to-br from-indigo-500 via-purple-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+            <div className="absolute inset-[1.5px] bg-white rounded-[2.4rem] -z-10" />
 
-            {/* Icon with "Aura" */}
-            <div className="relative w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner">
-              {React.cloneElement(trait.icon, {
-                size: 20,
-                className: "group-hover:scale-110 transition-transform",
-              })}
+            <div className="flex h-full items-center justify-between gap-5"> 
+                {/* Icon Glass-Container */}
+                <div className="w-1/4">
+                <div className="w-12 h-12 rounded-full  flex items-center justify-center bg-indigo-600 text-white  transition-all duration-500 shadow-inner">
+                  {React.cloneElement(trait.icon, { size: 28 })}
+                </div>
+                </div>
+
+                <div className=" ">
+                  <h4 className="text-xl font-semibold text-slate-900 tracking-tight leading-none mb-2 px-4">
+                    {trait.label}
+                  </h4>
+                </div> 
             </div>
 
-            <div className="relative">
-              <span className="block font-black text-slate-800 text-sm tracking-tight mb-0.5">
-                {trait.label}
-              </span>
-              <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Core Interest
-              </span>
-            </div>
-
-            {/* Corner Decorative Sparkle */}
-            <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-20 transition-opacity">
-              <IoSparklesSharp size={10} />
-            </div>
+            {/* Hover Shine Effect */}
+            <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
           </motion.div>
         ))}
       </div>
 
-      {/* Background Glow */}
-      <div className="absolute -bottom-10 -right-20 w-64 h-64 bg-indigo-50/50 blur-[100px] -z-10 rounded-full" />
+      {/* 3. AMBIENT ATMOSPHERE */}
+      <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-indigo-50/30 blur-[120px] rounded-full" />
     </section>
   );
 };

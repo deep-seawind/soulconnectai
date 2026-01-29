@@ -1,9 +1,10 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { z } from "zod";
 import AIMessage from "../../Home/AIMessage";
+import StepInputArea from "./StepInputArea";
 
-/* ------------------ ZOD SCHEMA ------------------ */
+// ── SCHEMA (unchanged) ────────────────────────────────────────
 const basicInfoSchema = z.object({
   fullName: z.string().min(2, "Please enter your full name"),
   gender: z.enum(["Male", "Female", "Other"]),
@@ -26,140 +27,139 @@ const basicInfoSchema = z.object({
   citizenship: z.string().optional(),
   languages: z.string().optional(),
   openToInterCommunity: z.enum(["Yes", "No", "Maybe"]),
+  profileImage: z.any().optional(),
+  galleryImages: z.array(z.any()).optional(),
 });
 
 const BasicInfo = ({ onNext }) => {
-  const fields = [
-    {
-      key: "fullName",
-      label: "Full Name",
-      type: "text",
-      message:
-        "Every great story starts with a name. How should I address you?",
-    },
-    {
-      key: "gender",
-      label: "Gender",
-      type: "select",
-      options: ["Male", "Female", "Other"],
-      message: "Identity matters. How do you identify yourself?",
-    },
-    {
-      key: "dob",
-      label: "Date of Birth",
-      type: "date",
-      message: "Time shapes us. When were you born?",
-    },
-    {
-      key: "height",
-      label: "Height (cm)",
-      type: "number",
-      message: "What is your height?",
-    },
-    {
-      key: "weight",
-      label: "Weight (kg)",
-      type: "number",
-      message: "And your weight?",
-    },
-    {
-      key: "maritalStatus",
-      label: "Marital Status",
-      type: "select",
-      options: ["Never Married", "Divorced", "Widowed"],
-      message: "What is your marital status?",
-    },
-    {
-      key: "religion",
-      label: "Religion / Community / Caste",
-      type: "text",
-      message: "Tell me about your beliefs.",
-    },
-    {
-      key: "country",
-      label: "Country",
-      type: "text",
-      message: "Where do you live?",
-    },
-    {
-      key: "state",
-      label: "State",
-      type: "text",
-      message: "Which state are you in?",
-    },
-    {
-      key: "city",
-      label: "City",
-      type: "text",
-      message: "Which city are you currently in?",
-    },
-    {
-      key: "nationality",
-      label: "Nationality",
-      type: "text",
-      message: "Your nationality?",
-    },
-    {
-      key: "citizenship",
-      label: "Citizenship",
-      type: "text",
-      message: "Your citizenship?",
-    },
-    {
-      key: "languages",
-      label: "Languages You Speak",
-      type: "text",
-      message: "Which languages do you speak?",
-    },
-    {
-      key: "openToInterCommunity",
-      label: "Open to inter-community marriage?",
-      type: "select",
-      options: ["Yes", "No", "Maybe"],
-      message: "Are you open to it?",
-    },
-  ];
+const fields = [
+  { key: "fullName", label: "Full Name", type: "text", message: "Every great story starts with a name. How should I address you?" },
+  { key: "gender", label: "Gender", type: "select", options: ["Male","Female","Other"], message: "Identity matters. How do you identify yourself?" },
+  { key: "dob", label: "Date of Birth", type: "date", message: "Time shapes us. When were you born?" },
+  { key: "height", label: "Height (cm)", type: "number", message: "What is your height?" },
+  { key: "weight", label: "Weight (kg)", type: "number", message: "And your weight?" },
+  { key: "maritalStatus", label: "Marital Status", type: "select", options: ["Never Married","Divorced","Widowed"], message: "What is your marital status?" },
+  { key: "religion", label: "Religion / Community / Caste", type: "text", message: "Tell me about your beliefs." },
+  { key: "country", label: "Country", type: "text", message: "Where do you live?" },
+  { key: "state", label: "State", type: "text", message: "Which state are you in?" },
+  { key: "city", label: "City", type: "text", message: "Which city are you currently in?" },
+  { key: "nationality", label: "Nationality", type: "text", message: "Your nationality?" },
+  { key: "citizenship", label: "Citizenship", type: "text", message: "Your citizenship?" },
+  { key: "languages", label: "Languages You Speak", type: "text", message: "Which languages do you speak?" },
+  { key: "openToInterCommunity", label: "Open to inter-community marriage?", type: "select", options: ["Yes","No","Maybe"], message: "Are you open to it?" },
+  { key: "profileImage", label: "Profile Image", type: "image", message: "Let’s start with a photo that truly represents you." },
+  { key: "galleryImages", label: "Additional Photos", type: "images", message: "You can add a few more photos to complete your profile." },
+];
 
   const [step, setStep] = useState(0);
   const [data, setData] = useState({});
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+ 
+  const objectUrlsRef = useRef(new Map());
 
   const field = fields[step];
-  const value = data[field.key] || "";
-  const isfieldFilled = Boolean(value?.toString().trim());
+  const rawValue = data[field.key];
+ 
+ 
+ 
+  useEffect(() => {
+    return () => { 
+      objectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+      objectUrlsRef.current.clear();
+    };
+  }, []);
+ 
+  useEffect(() => {
+    if (field.key === "galleryImages" && Array.isArray(rawValue)) {
+      const currentFiles = new Set(rawValue);
+      for (const [file, url] of objectUrlsRef.current.entries()) {
+        if (!currentFiles.has(file)) {
+          URL.revokeObjectURL(url);
+          objectUrlsRef.current.delete(file);
+        }
+      }
+    }
+  }, [rawValue, field.key]);
 
-  const updateValue = (val) => {
+  const isFieldFilled =
+    field.type === "image"
+      ? rawValue instanceof File
+      : field.type === "images"
+        ? Array.isArray(rawValue) && rawValue.length > 0
+        : Boolean(rawValue?.toString()?.trim());
+
+  const updateValue = (newValue) => {
     setError("");
-    setData((prev) => ({ ...prev, [field.key]: val }));
+ 
+    if (field.key === "galleryImages" && Array.isArray(newValue)) {
+      const prevFiles = Array.isArray(rawValue) ? rawValue : [];
+      const removed = prevFiles.filter((f) => !newValue.includes(f));
+      removed.forEach((file) => {
+        const url = objectUrlsRef.current.get(file);
+        if (url) {
+          URL.revokeObjectURL(url);
+          objectUrlsRef.current.delete(file);
+        }
+      });
+    }
+
+    setData((prev) => ({ ...prev, [field.key]: newValue }));
   };
 
   const next = () => {
     setError("");
-
-    const val = value?.toString().trim();
-    if (!val) {
+ 
+    if (
+      (field.type !== "image" &&
+        field.type !== "images" &&
+        !rawValue?.toString()?.trim()) ||
+      (field.type === "image" && !(rawValue instanceof File)) ||
+      (field.type === "images" &&
+        (!Array.isArray(rawValue) || rawValue.length === 0))
+    ) {
       setError("This field is required");
       return;
     }
-
-    const partial = { ...data, [field.key]: val };
-    const fieldSchema = basicInfoSchema.pick({ [field.key]: true });
-    const result = fieldSchema.safeParse(partial);
-
-    if (!result.success) {
-      setError(result.error.issues[0].message);
-      return;
+ 
+    if (field.type !== "image" && field.type !== "images") {
+      const partial = { [field.key]: rawValue };
+      const fieldSchema = basicInfoSchema.pick({ [field.key]: true });
+      const result = fieldSchema.safeParse(partial);
+      if (!result.success) {
+        setError(result.error.issues[0].message);
+        return;
+      }
     }
 
-    if (field.key === "fullName") setName(val);
+    if (field.key === "fullName") {
+      setName(rawValue?.trim() || "");
+    }
 
-    step === fields.length - 1 ? onNext() : setStep((s) => s + 1);
+    if (step === fields.length - 1) {
+      onNext();
+    } else {
+      setStep((s) => s + 1);
+    }
+  };
+
+  const removeSingleImage = () => {
+    setData((prev) => ({
+      ...prev,
+      [field.key]: null,
+    }));
+  };
+
+  const removeMultiImage = (index) => {
+    setData((prev) => ({
+      ...prev,
+      [field.key]: prev[field.key].filter((_, i) => i !== index),
+    }));
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-      {/* LEFT: AI MESSAGE (Slightly Higher) */}
+      {/* AI Message - unchanged */}
       <div className="flex justify-start lg:-mt-10">
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -174,104 +174,21 @@ const BasicInfo = ({ onNext }) => {
         </motion.div>
       </div>
 
-      {/* RIGHT: USER INPUT (Slightly Lower – Reply Style) */}
-      <motion.div
-        className="relative max-w-xl w-full lg:mt-10"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
-      >
-        {/* Ambient Glow */}
-        <div
-          className="absolute inset-0 -z-10 rounded-[2.8rem] 
-          bg-linear-to-br from-indigo-500/10 via-transparent to-rose-500/10 
-          blur-3xl"
-        />
-
-        {/* Reply Surface */}
-        <div
-          className="relative bg-white backdrop-blur-2xl 
-          border border-slate-200/60 
-          rounded-[2.5rem] p-8 md:p-10 
-          shadow-[0_30px_80px_rgba(0,0,0,0.12)]"
-        >
-          {/* Prompt */}
-          <h1 className="text-sm font-medium text-slate-500 mb-6">
-            {field.label}
-          </h1>
-
-          {/* Input */}
-          <div className="relative group">
-            {field.type === "select" ? (
-              <select
-                autoFocus
-                value={value}
-                onChange={(e) => updateValue(e.target.value)}
-                className="w-full bg-transparent text-xl border-b border-slate-300 pb-3 focus:outline-none"
-              >
-                <option value="">Choose your answer</option>
-                {field.options.map((o) => (
-                  <option key={o}>{o}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                autoFocus
-                type={field.type}
-                value={value}
-                onChange={(e) => updateValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && next()}
-                className="w-full bg-transparent text-xl border-b border-slate-300 pb-3 focus:outline-none"
-              />
-            )}
-
-            {/* Animated Underline */}
-            <span
-              className="absolute left-0 -bottom-px h-0.5 w-0
-              bg-linear-to-r from-indigo-500 to-rose-500
-              group-focus-within:w-full transition-all duration-500"
-            />
-          </div>
-          {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
-          {/* Footer */}
-          <div className="flex items-center justify-between mt-8">
-            <button
-              disabled={!isfieldFilled}
-              onClick={() => setStep(fields.length - 1)}
-              className={
-                isfieldFilled
-                  ? "bg-linear-to-r from-indigo-500 to-rose-500 px-6 py-2.5 text-white rounded-full"
-                  : "text-slate-300 cursor-not-allowed"
-              }
-            >
-              Skip to last
-            </button>
-
-            {/* Actions */}
-            <div className="flex gap-4">
-              {step > 0 && (
-                <button
-                  onClick={() => setStep((s) => s - 1)}
-                  className="px-6 py-2.5 bg-black text-white rounded-full"
-                >
-                  Back
-                </button>
-              )}
-
-              <button
-                onClick={next}
-                className="px-6 py-2.5 rounded-full bg-color text-white font-semibold"
-              >
-                {step === fields.length - 1 ? "Send" : "Reply"}
-              </button>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+     <StepInputArea
+        field={field}
+        rawValue={rawValue}
+        updateValue={updateValue}
+        next={next}
+        removeSingleImage={removeSingleImage}
+        removeMultiImage={removeMultiImage}
+        isFieldFilled={isFieldFilled}
+        step={step}
+        fields={fields}
+        setStep={setStep}
+        error={error}
+      />
     </div>
   );
 };
 
 export default BasicInfo;
-
- 

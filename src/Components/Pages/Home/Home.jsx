@@ -7,7 +7,7 @@ import SoulIntro from "./SoulIntro";
 import SoulLogin from "./SoulLogin";
 
 // Forms
-import AICompatibility from "../Forms/ai-compatibility/AICompatibility"; 
+import AICompatibility from "../Forms/ai-compatibility/AICompatibility";
 import Education from "../Forms/education/Education";
 import Family from "../Forms/family/Family";
 import Lifestyle from "../Forms/lifestyle/Lifestyle";
@@ -21,10 +21,9 @@ import BasicInfo from "../Forms/basic-info/BasicInfo";
 
 // Assets
 import MainBanner from "../../../assets/main-hero/main.jpg";
-import MainBannerGif from "../../../assets/main-hero/GIf-2.gif";
+import MainBannerGif from "../../../assets/main-hero/GIf-2-1.gif";
 import Logo from "../../../assets/logo/logo.png";
 import SoulChatContainer from "../../SoulSense/SoulChatContainer";
-
 
 /* ---------------------------------------
    STORAGE KEYS
@@ -42,11 +41,11 @@ const Home = () => {
      STATE
   --------------------------------------- */
   const [screen, setScreen] = useState(
-    () => sessionStorage.getItem(STORAGE_KEYS.SCREEN) || "intro"
+    () => sessionStorage.getItem(STORAGE_KEYS.SCREEN) || "intro",
   );
 
   const [step, setStep] = useState(
-    () => Number(sessionStorage.getItem(STORAGE_KEYS.STEP)) || 1
+    () => Number(sessionStorage.getItem(STORAGE_KEYS.STEP)) || 1,
   );
 
   const [isChanging, setIsChanging] = useState(false);
@@ -228,14 +227,14 @@ const Home = () => {
       className="min-h-screen w-full relative flex flex-col items-center overflow-x-hidden bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: `linear-gradient(
-          rgba(255,255,255,0),
-          rgba(255,255,255,0)
+          rgba(255,255,255,0.0),
+          rgba(255,255,255,0.0)
         ), url('${MainBanner}')`,
       }}
     >
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
-          <div className="w-65 h-32 md:w-600 md:h-310 overflow-hidden opacity-20 relative">
+          <div className="w-65 h-32 md:w-500 md:h-300 overflow-hidden opacity-20 relative">
             <div
               className="absolute top-0 w-full h-[200%] bg-no-repeat bg-center bg-contain"
               style={{ backgroundImage: `url('${MainBannerGif}')` }}
@@ -251,7 +250,7 @@ const Home = () => {
             {screen !== "intro" && (
               <button
                 onClick={handleBack}
-                className="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900/5 hover:bg-slate-900 text-slate-700 hover:text-white text-sm font-bold transition-all duration-300 border border-slate-200/50"
+                className="group flex items-center gap-2 px-5 py-2.5 rounded-full hover:bg-slate-900/5 bg-slate-900 hover:text-slate-700 text-white text-sm font-bold transition-all duration-300 border border-slate-200/50"
               >
                 ← Back
               </button>
@@ -263,8 +262,8 @@ const Home = () => {
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
             className="relative cursor-pointer"
           >
-            <div className="relative px-8 py-4 bg-white border border-slate-100 rounded-xl shadow-lg">
-              <img src={Logo} alt="Logo" className="w-28 md:w-36" />
+            <div className="relative px-5 py-2 bg-white border border-slate-100 rounded-xl shadow-lg">
+              <img src={Logo} alt="Logo" className="w-28 md:w-50" />
             </div>
           </motion.div>
 
@@ -305,7 +304,6 @@ const Home = () => {
       </div>
 
       <SoulChatContainer />
-
     </div>
   );
 };

@@ -1,116 +1,44 @@
-import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  IoChevronBack,
   IoChatbubbleEllipses,
   IoLocationSharp,
-  IoShieldCheckmarkOutline,
-  IoShareSocial, 
-  IoFlashOutline, 
-  IoCheckmarkCircle, 
+  IoCheckmarkCircle,
+  IoFlash,
+  IoShieldCheckmark,
 } from "react-icons/io5";
-import {
-  FiMoon,
-  FiCamera,
-  FiMusic,
-  FiCoffee,
-  FiMap,
-  FiBookmark,
-} from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { FiMoon, FiCamera, FiMusic, FiCoffee, FiMap } from "react-icons/fi";
 import HeartButton from "./HeartButton";
 import PersonalMetrics from "./PersonalMetrics";
 import InterestsSection from "./InterestsSection";
+import ProfileSlider from "./ProfileSlider";
 
 const ProfileDetails = ({ profile, onBack }) => {
-  const [saved, setSaved] = useState(false);
-
-    const data = profile || {
-        name: "Liam P",
-        age: 38,
-        location: "Chicago, USA",
-        status: "Casual Fun",
-        bio: "Architect by day, urban explorer by night. I believe the best stories are found between the pages of a passport and the bottom of a coffee cup. Looking for someone to share late-night jazz sessions and weekend gallery hops.",
-        traits: [
-        { icon: <FiMoon />, label: "Late Nights" },
-        { icon: <FiCamera />, label: "Photography" },
-        { icon: <FiMusic />, label: "Jazz" },
-        { icon: <FiCoffee />, label: "Cold Brew" },
-        { icon: <FiMap />, label: "Traveling" },
-        ],
-        image:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1000",
-        compatibility: 92,
-    };
+  const data = profile || {
+    name: "Liam P",
+    age: 38,
+    location: "Chicago, USA",
+    status: "Casual Fun",
+    bio: "Architect by day, urban explorer by night. I believe the best stories are found between the pages of a passport and the bottom of a coffee cup. Forever chasing cities with character, hidden cafés, and museums that make you lose track of time. Looking for someone to share late-night jazz sessions, weekend gallery hops, and flights booked on impulse. Bonus points if you love conversations that start small and end somewhere unexpected.",
+    traits: [
+      { icon: <FiMoon />, label: "Late Nights" },
+      { icon: <FiCamera />, label: "Photography" },
+      { icon: <FiMusic />, label: "Jazz" },
+      { icon: <FiCoffee />, label: "Cold Brew" },
+      { icon: <FiMap />, label: "Traveling" },
+    ],
+    images: [
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1000",
+    ],
+    compatibility: 92,
+  };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 selection:bg-indigo-100">
+    <div className="min-h-screen bg-white  ">
       <div className="flex flex-col lg:flex-row min-h-screen">
-        {/* LEFT SIDE: FIXED HERO IMAGE */}
-        <div className="relative w-full lg:w-1/2 h-[70vh] lg:h-screen lg:sticky lg:top-0 overflow-hidden">
-          <motion.img
-            initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            src={data.image}
-            alt={data.name}
-            className="w-full h-full object-cover"
-          />
+        <ProfileSlider data={data} onBack={onBack} />
 
-          {/* BACK BUTTON */}
-
-          <Link to={"/best-matches"} className="cursor-pointer">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onBack}
-              className="absolute top-8 left-8 p-4 bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl text-white shadow-2xl"
-            >
-              <IoChevronBack size={24} />
-            </motion.button>
-          </Link>
-
-          {/* IMAGE OVERLAY GRADIENT */}
-          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent lg:hidden" />
-
-          {/* Quick Actions */}
-          <div className="absolute top-8 right-8 flex gap-3">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setSaved(!saved)}
-              className="p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-white shadow-2xl hover:shadow-amber-500/20 transition-all"
-            >
-              <FiBookmark
-                size={20}
-                className={
-                  saved ? "text-amber-400 fill-amber-400" : "text-white"
-                }
-              />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-white shadow-2xl hover:shadow-indigo-500/20 transition-all"
-            >
-              <IoShareSocial size={20} />
-            </motion.button>
-          </div>
-
-          <div className="absolute bottom-10 left-10 lg:hidden text-white">
-            <h1 className="text-5xl font-black tracking-tighter">
-              {data.name}, {data.age}
-            </h1>
-            <div className="flex items-center gap-2 mt-2 opacity-80">
-              <IoLocationSharp />
-              <span className="font-bold uppercase text-xs tracking-widest">
-                {data.location}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT SIDE: SCROLLABLE DETAILS */}
         <div className="w-full lg:w-1/2 px-6 py-12 lg:px-24 lg:py-28 bg-[#FAFBFF] relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-100/40 blur-[120px] -z-10 rounded-full" />
 
@@ -119,90 +47,135 @@ const ProfileDetails = ({ profile, onBack }) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {/* 1. ULTRA-MODERN HEADER */}
-            <div className="hidden lg:block mb-16">
-              <div className="flex items-center gap-3 mb-8">
+            <div className="hidden lg:block mb-20 relative">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 0.05, x: 0 }}
+                transition={{ duration: 2 }}
+                className="absolute top-16 left-2 text-8xl font-bold text-slate-900 select-none pointer-events-none tracking-tighter"
+              >
+                {data.name}
+              </motion.div>
+
+              <div className="flex items-center gap-4 mb-10 relative z-10">
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="px-4 py-2 bg-color text-sm font-bold rounded-2xl shadow-lg shadow-rose-200 flex items-center gap-2"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="relative group overflow-hidden px-6 py-2.5 bg-slate-900 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-500 hover:shadow-indigo-500/20"
                 >
-                  <IoFlashOutline className="animate-pulse" />
-                  {data.compatibility}% Match
+                  <div className="absolute inset-0 bg-linear-to-r from-indigo-500 via-purple-500 to-rose-500 opacity-20 group-hover:opacity-40 transition-opacity" />
+                  <IoFlash className="text-amber-400 animate-bounce" />
+                  <span className="text-white text-sm font-bold tracking-wider uppercase">
+                    {data.compatibility}% Match
+                  </span>
+                  {/* Animated Shine */}
+                  <motion.div
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 3,
+                      ease: "linear",
+                    }}
+                    className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
+                  />
                 </motion.div>
 
                 <motion.div
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                  className="px-5 py-2.5 bg-white border border-slate-100/80 rounded-2xl shadow-sm flex items-center gap-2 group cursor-help"
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="px-5 py-2.5 bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl flex items-center gap-2 group cursor-pointer hover:border-emerald-200 transition-all shadow-sm"
                 >
                   <div className="relative">
-                    <IoShieldCheckmarkOutline className="text-indigo-500 text-lg group-hover:scale-110 transition-transform" />
-                    <span className="absolute top-0 right-0 w-2 h-2 bg-emerald-400 rounded-full border-2 border-white animate-ping" />
+                    <IoShieldCheckmark className="text-emerald-500 text-xl" />
+                    <motion.span
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                      className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-white"
+                    />
                   </div>
-                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+                  <span className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.2em]">
                     Identity Verified
                   </span>
                 </motion.div>
               </div>
 
-              <div className="relative">
-                <motion.h1
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-7xl font-bold text-slate-950 tracking-[-0.04em] leading-[0.85] relative"
-                >
-                  {data.name}
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.5, type: "spring" }}
-                    className="inline-block align-top ml-2"
+              <div className="relative z-10">
+                <div className="flex items-start gap-4">
+                  <motion.h1
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-6xl xl:text-8xl font-bold text-slate-900 tracking-tight leading-[0.8] mb-4"
                   >
-                    <IoCheckmarkCircle className="text-blue-500 text-5xl" />
-                  </motion.span>
-                </motion.h1>
+                    {data.name}
+                    <motion.span
+                      initial={{ scale: 0, rotate: -20 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: 0.5, type: "spring", damping: 12 }}
+                      className="inline-block align-top ml-4"
+                    >
+                      <div className="relative">
+                        <IoCheckmarkCircle className="text-blue-600 text-6xl shadow-blue-500/50" />
+                      </div>
+                    </motion.span>
+                  </motion.h1>
+                </div>
 
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="mt-10 flex items-center gap-6"
+                  transition={{ delay: 0.8 }}
+                  className="mt-12 flex items-center gap-8"
                 >
-                  <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50/50 rounded-xl text-indigo-600 border border-indigo-100/50 group cursor-pointer hover:bg-indigo-100 transition-colors">
-                    <IoLocationSharp className="group-hover:bounce" />
-                    <span className="font-black text-[11px] uppercase tracking-widest">
+                  {/* Location Chip */}
+                  <div className="group flex items-center gap-3 px-6 py-3 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-500 cursor-pointer overflow-hidden relative">
+                    <div className="absolute inset-0 bg-indigo-50 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    <IoLocationSharp className="text-rose-500 relative z-10 group-hover:scale-125 transition-transform" />
+                    <span className="font-bold text-[12px] text-slate-700 uppercase tracking-[0.2em] relative z-10">
                       {data.location}
                     </span>
+                  </div>
+
+                  <div className="flex items-center gap-6 border-l border-slate-200 pl-8">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-slate-900 tracking-tighter">
+                        1.2k
+                      </p>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                        Connects
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-slate-900 tracking-tighter">
+                        Gold
+                      </p>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                        Tier
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
               </div>
             </div>
 
-
-            {/* 3. BIO WITH TYPOGRAPHIC DEPTH */}
             <section className="mb-20 relative">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-0.5 w-12 bg-indigo-500" />
-                <h3 className="text-lg font-semibold text-slate-600">
-                  The Narrative
-                </h3>
-              </div>
+              <h2 className="text-4xl font-bold text-slate-900  ">About Me</h2>
+
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: "4rem" }}
+                className="h-1 bg-color-border my-4 rounded-full"
+              />
               <div className="relative">
-                <p className="text-xl text-slate-800">{data.bio}</p>
+                <p className="text-lg text-slate-800">{data.bio}</p>
               </div>
             </section>
 
-            
-            {/* 2. STATS BENTO GRID (The "Data" Section) */}
             <PersonalMetrics />
 
-            {/* 4. CHIP-STYLE INTERESTS GRID */}
-          <InterestsSection data={data}/>
+            <InterestsSection data={data} />
 
-            {/* 5. FLOATING GLASS ACTION BAR */}
             <div className="sticky bottom-8 lg:relative lg:bottom-0">
               <motion.div
                 initial={{ y: 50, opacity: 0 }}
@@ -212,7 +185,7 @@ const ProfileDetails = ({ profile, onBack }) => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex-1 h-20 bg-slate-950 text-white rounded-[2.2rem] font-black text-sm uppercase tracking-[0.3em] flex items-center justify-center gap-4 relative overflow-hidden group"
+                  className="flex-1 h-20 bg-slate-950 text-white rounded-[2.2rem] font-bold text-sm uppercase tracking-[0.3em] flex items-center justify-center gap-4 relative overflow-hidden group"
                 >
                   <div className="absolute inset-0 bg-linear-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <IoChatbubbleEllipses size={22} className="relative z-10" />

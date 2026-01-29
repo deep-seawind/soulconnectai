@@ -15,12 +15,14 @@ const SoulChatBot = ({ onClose }) => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages]);
 
+  console.log(messages);
+  
+
   const sendMessage = () => {
     if (!input.trim()) return;
     setMessages((prev) => [...prev, { from: "user", text: input }]);
     setInput("");
-    
-    // Simulate thinking state
+     
     setTimeout(() => {
       setMessages((prev) => [...prev, { from: "bot", text: "I hear you ❤️ Tell me more." }]);
     }, 1000);

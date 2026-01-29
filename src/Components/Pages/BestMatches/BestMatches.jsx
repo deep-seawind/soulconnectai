@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { IoLocationSharp, IoFlame, IoCheckmarkCircle } from "react-icons/io5"; 
+import { IoLocationSharp, IoFlame, IoCheckmarkCircle, IoCloseOutline, IoHeart } from "react-icons/io5"; 
 import { FiMoon, FiCamera } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
@@ -88,13 +88,28 @@ const BestMatches = () => {
             >
               <Link to={"/profile-details"}>
                 {/* IMAGE WITH ZOOM EFFECT */}
-                <div className="absolute inset-0 overflow-hidden">
-                  <img
-                    src={match.image}
-                    alt={match.name}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
-                  />
-                </div>
+              <div className="aspect-4/5 overflow-hidden">
+            <motion.img
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
+              src={match.image}
+              alt={match.name}
+              className="w-full h-full object-cover"
+            />
+            {/* Multi-layered Vignette */}
+            <div className="absolute inset-0 bg-linear-to-t from-[#020617] via-transparent to-transparent opacity-90" />
+            <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-transparent" />
+          </div>
+
+                {/* FLOATING ACTION BUTTONS */}
+          <div className="absolute top-1/2 left-0 right-0 flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:-translate-y-2">
+            <button className="w-14 h-14 bg-white/10 backdrop-blur-2xl rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-rose-500 transition-all active:scale-90">
+              <IoCloseOutline size={28} />
+            </button>
+            <button className="w-14 h-14 bg-indigo-500 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all active:scale-90">
+              <IoHeart size={28} />
+            </button>
+          </div>
 
                 {/* TOP STATUS BADGE - LIGHT VERSION */}
                 <div className="absolute top-8 left-8">
